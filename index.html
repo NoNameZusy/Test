@@ -1,0 +1,1753 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bonus Kart Sistemi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Genel stil ayarları */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-color: #4e54c8;
+            --secondary-color: #8f94fb;
+            --accent-color: #ff6b6b;
+            --text-color: #333;
+            --light-text: #fafafa;
+            --background: #f9f9f9;
+            --card-bg: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --animation-time: 0.5s;
+            --sidebar-bg: #ffffff;
+            --menu-hover: #f0f2ff;
+            --overlay-bg: rgba(0, 0, 0, 0.5);
+        }
+
+        .dark-theme {
+            --primary-color: #6d74e3;
+            --secondary-color: #a1a6ff;
+            --accent-color: #ff8c8c;
+            --text-color: #e0e0e0;
+            --light-text: #fafafa;
+            --background: #121212;
+            --card-bg: #1e1e1e;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --sidebar-bg: #1a1a1a;
+            --menu-hover: #2c2c2c;
+        }
+        
+        .blue-theme {
+            --primary-color: #2962ff;
+            --secondary-color: #768fff;
+            --accent-color: #26c6da;
+            --text-color: #333;
+            --light-text: #fafafa;
+            --background: #e3f2fd;
+            --card-bg: #ffffff;
+            --shadow: 0 10px 30px rgba(41, 98, 255, 0.1);
+            --sidebar-bg: #ffffff;
+            --menu-hover: #e6ecff;
+        }
+        
+        .green-theme {
+            --primary-color: #00c853;
+            --secondary-color: #69f0ae;
+            --accent-color: #ffab00;
+            --text-color: #333;
+            --light-text: #fafafa;
+            --background: #e8f5e9;
+            --card-bg: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 200, 83, 0.1);
+            --sidebar-bg: #ffffff;
+            --menu-hover: #e0f2e9;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body {
+            background: var(--background);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            transition: background 0.3s ease;
+            padding: 15px;
+        }
+        
+        /* Arka plan animasyonu */
+        .background {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .background li {
+            position: absolute;
+            display: block;
+            list-style: none;
+            width: 20px;
+            height: 20px;
+            background: rgba(78, 84, 200, 0.1);
+            animation: animate 25s linear infinite;
+            bottom: -150px;
+            border-radius: 50%;
+        }
+        
+        .background li:nth-child(1) {
+            left: 25%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 0s;
+        }
+        
+        .background li:nth-child(2) {
+            left: 10%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 2s;
+            animation-duration: 12s;
+        }
+        
+        .background li:nth-child(3) {
+            left: 70%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 4s;
+        }
+        
+        .background li:nth-child(4) {
+            left: 40%;
+            width: 60px;
+            height: 60px;
+            animation-delay: 0s;
+            animation-duration: 18s;
+        }
+        
+        .background li:nth-child(5) {
+            left: 65%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 0s;
+        }
+        
+        .background li:nth-child(6) {
+            left: 75%;
+            width: 110px;
+            height: 110px;
+            animation-delay: 3s;
+        }
+        
+        .background li:nth-child(7) {
+            left: 35%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 7s;
+        }
+        
+        .background li:nth-child(8) {
+            left: 50%;
+            width: 25px;
+            height: 25px;
+            animation-delay: 15s;
+            animation-duration: 45s;
+        }
+        
+        .background li:nth-child(9) {
+            left: 20%;
+            width: 15px;
+            height: 15px;
+            animation-delay: 2s;
+            animation-duration: 35s;
+        }
+        
+        .background li:nth-child(10) {
+            left: 85%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 0s;
+            animation-duration: 11s;
+        }
+        
+        @keyframes animate {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+                border-radius: 0;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+                border-radius: 50%;
+            }
+        }
+        
+        /* Container stilleri */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* Dashboard container */
+        .dashboard-container {
+            width: 100%;
+            max-width: 1200px;
+            min-height: 600px;
+            display: flex;
+            transition: all 0.3s ease;
+        }
+        
+        /* Kart stilleri */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: all var(--animation-time) ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 340px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .card-title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        /* Form stilleri */
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(78, 84, 200, 0.2);
+        }
+        
+        /* Buton stilleri */
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--light-text);
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(78, 84, 200, 0.3);
+            outline: none;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(78, 84, 200, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-block {
+            width: 100%;
+            display: block;
+        }
+        
+        /* Step stilleri */
+        .step {
+            display: none;
+            animation-duration: var(--animation-time);
+            animation-fill-mode: both;
+        }
+        
+        .step.active {
+            display: block;
+        }
+        
+        /* Step animasyonları */
+        .slide-in-right {
+            animation-name: slideInRight;
+        }
+        
+        .slide-out-left {
+            animation-name: slideOutLeft;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOutLeft {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+        }
+        
+        /* Loading screen */
+        .loading-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 6px solid rgba(78, 84, 200, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Bonus Kart stilleri */
+        .bonus-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 20px;
+            padding: 25px;
+            color: var(--light-text);
+            position: relative;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(78, 84, 200, 0.3);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .bonus-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 60%);
+            transform: rotate(45deg);
+            pointer-events: none;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-logo {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .card-chip {
+            width: 50px;
+            height: 40px;
+            background: linear-gradient(135deg, #ffd700, #ffbd00);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-chip::before, .card-chip::after {
+            content: '';
+            position: absolute;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-chip::before {
+            width: 100%;
+            height: 10px;
+            top: 15px;
+        }
+        
+        .card-chip::after {
+            width: 10px;
+            height: 100%;
+            left: 20px;
+        }
+        
+        .card-number {
+            font-size: 22px;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .card-info {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .card-info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .info-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .barcode {
+            margin-top: 20px;
+            height: 60px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJiYXJjb2RlIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iMTAwIiBmaWxsPSJ3aGl0ZSIgLz48cmVjdCB4PSI0IiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxMDAiIGZpbGw9IndoaXRlIiAvPjxyZWN0IHg9IjciIHk9IjAiIHdpZHRoPSIzIiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iMTIiIHk9IjAiIHdpZHRoPSIyIiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iMTYiIHk9IjAiIHdpZHRoPSI1IiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iMjMiIHk9IjAiIHdpZHRoPSIyIiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iMjciIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iMzAiIHk9IjAiIHdpZHRoPSIzIiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iMzUiIHk9IjAiIHdpZHRoPSI2IiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iNDMiIHk9IjAiIHdpZHRoPSIyIiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iNDciIHk9IjAiIHdpZHRoPSI1IiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iNTQiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iNTciIHk9IjAiIHdpZHRoPSIzIiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iNjMiIHk9IjAiIHdpZHRoPSI0IiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iNjkiIHk9IjAiIHdpZHRoPSIyIiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iNzQiIHk9IjAiIHdpZHRoPSI1IiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iODEiIHk9IjAiIHdpZHRoPSIyIiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iODUiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iODgiIHk9IjAiIHdpZHRoPSIzIiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PHJlY3QgeD0iOTMiIHk9IjAiIHdpZHRoPSI0IiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIC8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2JhcmNvZGUpIiAvPjwvc3ZnPg==');
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        /* Kullanıcı detayları */
+        .user-details {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-weight: 500;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+        
+        .detail-value {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .balance {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* Dashboard stilleri */
+        .dashboard-sidebar {
+            width: 250px;
+            background: var(--sidebar-bg);
+            border-radius: 20px 0 0 20px;
+            padding: 30px 0;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-main {
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: 0 20px 20px 0;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+        
+        /* Mobil sidebar ayarları */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--primary-color);
+            color: var(--light-text);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+        
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--overlay-bg);
+            z-index: 990;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .profile-section {
+            padding: 0 20px 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            overflow: hidden;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-pic i {
+            font-size: 50px;
+            color: #ccc;
+        }
+        
+        .profile-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+        
+        .profile-card-id {
+            font-size: 14px;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+        
+        .menu-section {
+            padding: 0 10px;
+        }
+        
+        .menu-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+        }
+        
+        .menu-item:hover, .menu-item.active {
+            background: var(--menu-hover);
+            color: var(--primary-color);
+        }
+        
+        .menu-item i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding-bottom: 15px;
+        }
+        
+        .dashboard-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .dashboard-content {
+            display: none;
+        }
+        
+        .dashboard-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-icon {
+            font-size: 30px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+        
+        .transactions-container {
+            margin-top: 30px;
+        }
+        
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+        
+        .transaction-item:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .transaction-details {
+            display: flex;
+            align-items: center;
+        }
+        
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            background-color: rgba(78, 84, 200, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .transaction-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .transaction-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+        
+        .transaction-date {
+            font-size: 12px;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+        
+        .transaction-amount {
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        .amount-negative {
+            color: var(--accent-color);
+        }
+        
+        .amount-positive {
+            color: var(--primary-color);
+        }
+        
+        .section-title {
+            margin: 25px 0 15px;
+            color: var(--primary-color);
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .theme-select {
+            margin-top: 30px;
+        }
+        
+        .theme-options {
+            display: flex;
+            justify-content: center;
+            
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .theme-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .theme-option.active {
+            transform: scale(1.2);
+            border: 2px solid var(--text-color);
+        }
+        
+        .theme-purple {
+            background: linear-gradient(135deg, #4e54c8, #8f94fb);
+        }
+        
+        .theme-dark {
+            background: linear-gradient(135deg, #2c3e50, #4a5568);
+        }
+        
+        .theme-blue {
+            background: linear-gradient(135deg, #2962ff, #768fff);
+        }
+        
+        .theme-green {
+            background: linear-gradient(135deg, #00c853, #69f0ae);
+        }
+        
+        .profile-upload {
+            margin-top: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .upload-btn {
+            background: var(--primary-color);
+            color: var(--light-text);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-btn:hover {
+            background: var(--secondary-color);
+        }
+        
+        #profileImageInput {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        /* Mobil uyumluluk */
+        @media (max-width: 992px) {
+            .dashboard-container {
+                flex-direction: column;
+                max-width: 600px;
+            }
+            
+            .dashboard-sidebar {
+                border-radius: 20px 20px 0 0;
+                width: 100%;
+                position: fixed;
+                top: 0;
+                left: -100%;
+                height: 100%;
+                z-index: 995;
+                transition: left 0.3s ease;
+            }
+            
+            .dashboard-sidebar.active {
+                left: 0;
+            }
+            
+            .dashboard-main {
+                border-radius: 20px;
+                width: 100%;
+                margin-top: 60px;
+            }
+            
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .sidebar-overlay {
+                display: block;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+            }
+            
+            .sidebar-overlay.active {
+                opacity: 1;
+                pointer-events: auto;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .card {
+                padding: 20px;
+                min-height: 300px;
+            }
+            
+            .card-title {
+                font-size: 20px;
+            }
+            
+            .form-control {
+                padding: 12px;
+            }
+            
+            .btn {
+                padding: 12px 24px;
+            }
+            
+            .card-number {
+                font-size: 18px;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .transaction-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .transaction-amount {
+                margin-top: 10px;
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animasyonlu arka plan -->
+    <ul class="background">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    
+    <!-- Mobil Menü Arka Plan Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Mobil Menü Toggle Butonu -->
+    <div class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Ana içerik -->
+    <div class="container" id="loginContainer">
+        <div class="card">
+            <!-- Adım 1: Bonus Kart ID girişi -->
+            <div class="step active slide-in-right" id="step1">
+                <h2 class="card-title">Bonus Kart Sistemi</h2>
+                <div class="form-group">
+                    <label for="cardId">Bonus Kart ID'nizi girin</label>
+                    <input type="text" class="form-control" id="cardId" placeholder="ör. BNS12345678">
+                </div>
+                <button class="btn btn-block" id="nextStep1">İleri</button>
+            </div>
+            
+            <!-- Adım 2: Kişisel bilgiler -->
+            <div class="step" id="step2">
+                <h2 class="card-title">Kişisel Bilgiler</h2>
+                <div class="form-group">
+                    <label for="name">Adınız</label>
+                    <input type="text" class="form-control" id="name" placeholder="Adınızı girin">
+                </div>
+                <div class="form-group">
+                    <label for="surname">Soyadınız</label>
+                    <input type="text" class="form-control" id="surname" placeholder="Soyadınızı girin">
+                </div>
+                <div class="form-group">
+                    <label for="birthdate">Doğum Tarihiniz</label>
+                    <input type="date" class="form-control" id="birthdate">
+                </div>
+                <button class="btn btn-block" id="nextStep2">Giriş Yap</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Dashboard Container -->
+    <div class="dashboard-container" id="dashboardContainer" style="display: none;">
+        <!-- Sidebar -->
+        <div class="dashboard-sidebar" id="sidebar">
+            <!-- Profil Bölümü -->
+            <div class="profile-section">
+                <div class="profile-pic">
+                    <i class="fas fa-user" id="defaultProfileIcon"></i>
+                    <img src="" id="profileImage" alt="Profil Resmi" style="display: none;">
+                </div>
+                <h3 class="profile-name" id="sidebarName">Ad Soyad</h3>
+                <div class="profile-card-id" id="sidebarCardId">BNS12345678</div>
+            </div>
+            
+            <!-- Menü Bölümü -->
+            <div class="menu-section">
+                <div class="menu-item active" data-tab="home">
+                    <i class="fas fa-home"></i>
+                    <span>Ana Sayfa</span>
+                </div>
+                <div class="menu-item" data-tab="card">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Kartım</span>
+                </div>
+                <div class="menu-item" data-tab="profile">
+                    <i class="fas fa-user"></i>
+                    <span>Profil</span>
+                </div>
+                <div class="menu-item" data-tab="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Ayarlar</span>
+                </div>
+                <div class="menu-item" id="logoutButton">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Çıkış Yap</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Ana İçerik -->
+        <div class="dashboard-main">
+            <!-- Ana Sayfa -->
+            <div class="dashboard-content active" id="home-content">
+                <div class="dashboard-header">
+                    <h2 class="dashboard-title">Ana Sayfa</h2>
+                    <div class="user-welcome" id="welcomeMessage">Hoş geldiniz!</div>
+                </div>
+                
+                <!-- İstatistik Kartları -->
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="stat-value" id="balanceValue">0 TL</div>
+                        <div class="stat-label">Bakiye</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-value">250</div>
+                        <div class="stat-label">Bonus Puan</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Alışveriş Sayısı</div>
+                    </div>
+                </div>
+                
+                <!-- Kart Özeti -->
+                <h3 class="section-title">Bonus Kartınız</h3>
+                <div class="bonus-card">
+                    <div class="card-header">
+                        <div class="card-logo">BONUS CARD</div>
+                        <div class="card-chip"></div>
+                    </div>
+                    <div class="card-number" id="dashboardCardNumber">**** **** **** ****</div>
+                    <div class="card-info">
+                        <div class="card-info-item">
+                            <span class="info-label">Kart Sahibi</span>
+                            <span class="info-value" id="dashboardCardHolder">AD SOYAD</span>
+                        </div>
+                        <div class="card-info-item">
+                            <span class="info-label">Geçerlilik</span>
+                            <span class="info-value">03.20.2028</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Son İşlemler -->
+                <h3 class="section-title">Son İşlemler</h3>
+                <div class="user-details">
+                    <div class="transactions-container" id="transactionsContainer">
+                        <!-- İşlemler JavaScript ile eklenecek -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kartım -->
+            <div class="dashboard-content" id="card-content">
+                <div class="dashboard-header">
+                    <h2 class="dashboard-title">Bonus Kartım</h2>
+                </div>
+                
+                <!-- Büyük Kart Gösterimi -->
+                <div class="bonus-card" style="margin-bottom: 30px;">
+                    <div class="card-header">
+                        <div class="card-logo">BONUS CARD</div>
+                        <div class="card-chip"></div>
+                    </div>
+                    <div class="card-number" id="cardPageNumber">**** **** **** ****</div>
+                    <div class="card-info">
+                        <div class="card-info-item">
+                            <span class="info-label">Kart Sahibi</span>
+                            <span class="info-value" id="cardPageHolder">AD SOYAD</span>
+                        </div>
+                        <div class="card-info-item">
+                            <span class="info-label">Geçerlilik</span>
+                            <span class="info-value">03.20.2028</span>
+                        </div>
+                    </div>
+                    <div class="barcode"></div>
+                </div>
+                
+                <!-- Kart Detayları -->
+                <div class="user-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Kart ID:</span>
+                        <span class="detail-value" id="cardPageId">BNS12345678</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Ad Soyad:</span>
+                        <span class="detail-value" id="cardPageFullName">Ad Soyad</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Doğum Tarihi:</span>
+                        <span class="detail-value" id="cardPageBirthdate">01.01.1990</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Bakiye:</span>
+                        <span class="detail-value balance" id="cardPageBalance">0 TL</span>
+                    </div>
+                </div>
+                
+                <!-- Son İşlemler -->
+                <h3 class="section-title">Son İşlemler</h3>
+                <div class="user-details">
+                    <div class="transactions-container" id="cardTransactionsContainer">
+                        <!-- İşlemler JavaScript ile eklenecek -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profil -->
+            <div class="dashboard-content" id="profile-content">
+                <div class="dashboard-header">
+                    <h2 class="dashboard-title">Profil Bilgilerim</h2>
+                </div>
+                
+                <!-- Profil Formu -->
+                <div>
+                    <div class="form-group">
+                        <label for="profileName">Adınız</label>
+                        <input type="text" class="form-control" id="profileName">
+                    </div>
+                    <div class="form-group">
+                        <label for="profileSurname">Soyadınız</label>
+                        <input type="text" class="form-control" id="profileSurname">
+                    </div>
+                    <div class="form-group">
+                        <label for="profileBirthdate">Doğum Tarihiniz</label>
+                        <input type="date" class="form-control" id="profileBirthdate">
+                    </div>
+                    <div class="form-group">
+                        <label for="profileEmail">E-posta</label>
+                        <input type="email" class="form-control" id="profileEmail" placeholder="ornek@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="profilePhone">Telefon</label>
+                        <input type="tel" class="form-control" id="profilePhone" placeholder="05XX XXX XX XX">
+                    </div>
+                    <button class="btn" id="saveProfileButton">Bilgileri Kaydet</button>
+                </div>
+            </div>
+            
+            <!-- Ayarlar -->
+            <div class="dashboard-content" id="settings-content">
+                <div class="dashboard-header">
+                    <h2 class="dashboard-title">Ayarlar</h2>
+                </div>
+                
+                <!-- Profil Resmi Ayarları -->
+                <div class="user-details" style="margin-bottom: 30px;">
+                    <h3 class="section-title">Profil Resmi</h3>
+                    <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                        <div class="profile-pic" style="width: 80px; height: 80px; margin: 0 20px 0 0;">
+                            <i class="fas fa-user" id="settingsDefaultIcon"></i>
+                            <img src="" id="settingsProfileImage" alt="Profil Resmi" style="display: none;">
+                        </div>
+                        <div class="profile-upload">
+                            <label class="upload-btn">
+                                Resim Yükle
+                                <input type="file" id="settingsProfileImageInput" accept="image/*">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tema Ayarları -->
+                <div class="user-details" style="margin-bottom: 30px;">
+                    <h3 class="section-title">Tema Seçenekleri</h3>
+                    <div class="theme-options">
+                        <div class="theme-option theme-purple active" data-theme="default"></div>
+                        <div class="theme-option theme-dark" data-theme="dark"></div>
+                        <div class="theme-option theme-blue" data-theme="blue"></div>
+                        <div class="theme-option theme-green" data-theme="green"></div>
+                    </div>
+                </div>
+                
+                <!-- Bildirim Ayarları -->
+                <div class="user-details">
+                    <h3 class="section-title">Bildirim Ayarları</h3>
+                    <div class="form-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <label for="emailNotifications" style="margin-bottom: 0;">E-posta Bildirimleri</label>
+                            <input type="checkbox" id="emailNotifications" checked>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <label for="smsNotifications" style="margin-bottom: 0;">SMS Bildirimleri</label>
+                            <input type="checkbox" id="smsNotifications" checked>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <label for="marketingNotifications" style="margin-bottom: 0;">Pazarlama Bildirimleri</label>
+                            <input type="checkbox" id="marketingNotifications">
+                        </div>
+                    </div>
+                    <button class="btn" id="saveSettingsButton">Ayarları Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Yükleme ekranı -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+        <p style="margin-top: 20px; color: var(--light-text);">Bilgileriniz kontrol ediliyor...</p>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elemanlarını seçiyoruz
+            const loginContainer = document.getElementById('loginContainer');
+            const dashboardContainer = document.getElementById('dashboardContainer');
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const loadingScreen = document.getElementById('loadingScreen');
+            
+            const nextStep1Button = document.getElementById('nextStep1');
+            const nextStep2Button = document.getElementById('nextStep2');
+            const logoutButton = document.getElementById('logoutButton');
+            
+            const cardIdInput = document.getElementById('cardId');
+            const nameInput = document.getElementById('name');
+            const surnameInput = document.getElementById('surname');
+            const birthdateInput = document.getElementById('birthdate');
+            
+            // Dashboard DOM elemanları
+            const menuItems = document.querySelectorAll('.menu-item');
+            const dashboardContents = document.querySelectorAll('.dashboard-content');
+            const themeOptions = document.querySelectorAll('.theme-option');
+            
+            // Profil resmi için input elemanları
+            const settingsProfileImageInput = document.getElementById('settingsProfileImageInput');
+            const profileImage = document.getElementById('profileImage');
+            const settingsProfileImage = document.getElementById('settingsProfileImage');
+            const defaultProfileIcon = document.getElementById('defaultProfileIcon');
+            const settingsDefaultIcon = document.getElementById('settingsDefaultIcon');
+            
+            // Profil bilgileri
+            const sidebarName = document.getElementById('sidebarName');
+            const sidebarCardId = document.getElementById('sidebarCardId');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            
+            // Kart bilgileri
+            const dashboardCardNumber = document.getElementById('dashboardCardNumber');
+            const dashboardCardHolder = document.getElementById('dashboardCardHolder');
+            const balanceValue = document.getElementById('balanceValue');
+            
+            // Kart sayfası bilgileri
+            const cardPageNumber = document.getElementById('cardPageNumber');
+            const cardPageHolder = document.getElementById('cardPageHolder');
+            const cardPageId = document.getElementById('cardPageId');
+            const cardPageFullName = document.getElementById('cardPageFullName');
+            const cardPageBirthdate = document.getElementById('cardPageBirthdate');
+            const cardPageBalance = document.getElementById('cardPageBalance');
+            
+            // Profil sayfası form elemanları
+            const profileName = document.getElementById('profileName');
+            const profileSurname = document.getElementById('profileSurname');
+            const profileBirthdate = document.getElementById('profileBirthdate');
+            const profileEmail = document.getElementById('profileEmail');
+            const profilePhone = document.getElementById('profilePhone');
+            const saveProfileButton = document.getElementById('saveProfileButton');
+            
+            // Ayarlar sayfası elemanları
+            const saveSettingsButton = document.getElementById('saveSettingsButton');
+            
+            // Mobil menü elemanları
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            
+            // Mobil menü toggle
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+            });
+            
+            // Overlay'e tıklayınca sidebar'ı gizle
+            sidebarOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            });
+            
+            // Menü öğesine tıklandığında sidebar'ı kapat (mobil)
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (window.innerWidth <= 992) {
+                        sidebar.classList.remove('active');
+                        sidebarOverlay.classList.remove('active');
+                    }
+                });
+            });
+            
+            // Adım 1'den Adım 2'ye geçiş
+            nextStep1Button.addEventListener('click', function() {
+                if (!cardIdInput.value.trim()) {
+                    alert('Lütfen Bonus Kart ID bilgisini girin.');
+                    return;
+                }
+                
+                // Yükleme ekranını gösteriyoruz
+                loadingScreen.style.display = 'flex';
+                
+                // 2 saniye sonra işlemi tamamlıyoruz
+                setTimeout(function() {
+                    // Yükleme ekranını gizliyoruz
+                    loadingScreen.style.display = 'none';
+                    
+                    // Animasyonla geçiş yapıyoruz
+                    step1.classList.remove('active', 'slide-in-right');
+                    step1.classList.add('slide-out-left');
+                    
+                    setTimeout(function() {
+                        step1.style.display = 'none';
+                        step2.classList.add('active', 'slide-in-right');
+                    }, 500);
+                }, 2000);
+            });
+            
+            // Adım 2'den Dashboard'a geçiş
+            nextStep2Button.addEventListener('click', function() {
+                // Form validasyonu
+                if (!nameInput.value.trim() || !surnameInput.value.trim() || !birthdateInput.value) {
+                    alert('Lütfen tüm bilgileri eksiksiz doldurun.');
+                    return;
+                }
+                
+                // Yükleme ekranını gösteriyoruz
+                loadingScreen.style.display = 'flex';
+                
+                // 2 saniye sonra işlemi tamamlıyoruz
+                setTimeout(function() {
+                    // Yükleme ekranını gizliyoruz
+                    loadingScreen.style.display = 'none';
+                    
+                    // Kart bilgilerini hazırlıyoruz
+                    const randomCardNumber = generateRandomCardNumber();
+                    const randomBalance = Math.floor(Math.random() * 1000) + 100;
+                    const fullName = `${nameInput.value} ${surnameInput.value}`;
+                    
+                    // Dashboard bilgilerini güncelliyoruz
+                    sidebarName.textContent = fullName;
+                    sidebarCardId.textContent = cardIdInput.value;
+                    welcomeMessage.textContent = `Hoş geldiniz, ${nameInput.value}!`;
+                    dashboardCardNumber.textContent = randomCardNumber;
+                    dashboardCardHolder.textContent = fullName.toUpperCase();
+                    balanceValue.textContent = `${randomBalance} TL`;
+                    
+                    // Kart sayfası bilgilerini güncelliyoruz
+                    cardPageNumber.textContent = randomCardNumber;
+                    cardPageHolder.textContent = fullName.toUpperCase();
+                    cardPageId.textContent = cardIdInput.value;
+                    cardPageFullName.textContent = fullName;
+                    cardPageBalance.textContent = `${randomBalance} TL`;
+                    
+                    // Doğum tarihini formatla
+                    const birthdate = new Date(birthdateInput.value);
+                    cardPageBirthdate.textContent = birthdate.toLocaleDateString('tr-TR');
+                    
+                    // Profil sayfası form değerlerini dolduruyoruz
+                    profileName.value = nameInput.value;
+                    profileSurname.value = surnameInput.value;
+                    profileBirthdate.value = birthdateInput.value;
+                    
+                    // Login container'ı gizleyip dashboard'ı gösteriyoruz
+                    loginContainer.style.display = 'none';
+                    dashboardContainer.style.display = 'flex';
+                    
+                    // İşlem geçmişini oluşturuyoruz
+                    createTransactionHistory('transactionsContainer', defaultTransactions, 3);
+                    createTransactionHistory('cardTransactionsContainer');
+                    
+                }, 2000);
+            });
+            
+            // Çıkış butonuna tıklama
+            logoutButton.addEventListener('click', function() {
+                // Yükleme ekranını gösteriyoruz
+                loadingScreen.style.display = 'flex';
+                
+                setTimeout(function() {
+                    // Yükleme ekranını gizliyoruz
+                    loadingScreen.style.display = 'none';
+                    
+                    // Dashboard'ı gizleyip login sayfasını gösteriyoruz
+                    dashboardContainer.style.display = 'none';
+                    loginContainer.style.display = 'block';
+                    
+                    // Form alanlarını temizliyoruz
+                    cardIdInput.value = '';
+                    nameInput.value = '';
+                    surnameInput.value = '';
+                    birthdateInput.value = '';
+                    
+                    // Adım 1'e dönüyoruz
+                    step2.classList.remove('active', 'slide-in-right');
+                    step2.style.display = 'none';
+                    step1.classList.remove('slide-out-left');
+                    step1.classList.add('active', 'slide-in-right');
+                    
+                    // Profil resmini sıfırlıyoruz
+                    profileImage.style.display = 'none';
+                    settingsProfileImage.style.display = 'none';
+                    defaultProfileIcon.style.display = 'block';
+                    settingsDefaultIcon.style.display = 'block';
+                }, 2000);
+            });
+            
+            // Menü geçişleri
+            menuItems.forEach(function(menuItem) {
+                if (menuItem.id !== 'logoutButton') {
+                    menuItem.addEventListener('click', function() {
+                        // Aktif menü öğesini güncelle
+                        menuItems.forEach(item => item.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // İlgili içeriği göster
+                        const tabId = this.getAttribute('data-tab');
+                        dashboardContents.forEach(content => content.classList.remove('active'));
+                        document.getElementById(`${tabId}-content`).classList.add('active');
+                    });
+                }
+            });
+            
+            // Tema seçenekleri
+            themeOptions.forEach(function(option) {
+                option.addEventListener('click', function() {
+                    themeOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const theme = this.getAttribute('data-theme');
+                    
+                    // Tema sınıflarını temizle
+                    document.body.classList.remove('dark-theme', 'blue-theme', 'green-theme');
+                    
+                    // Seçilen temayı uygula
+                    if (theme !== 'default') {
+                        document.body.classList.add(`${theme}-theme`);
+                    }
+                    
+                    // Tema tercihini localStorage'e kaydet
+                    localStorage.setItem('bonusCardTheme', theme);
+                });
+            });
+            
+            // Profil resmi yükleme işlevi
+            settingsProfileImageInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        // Tüm profil resmi elemanlarını güncelle
+                        
+                        // Tüm profil resmi elemanlarını güncelle
+                        profileImage.src = e.target.result;
+                        settingsProfileImage.src = e.target.result;
+                        
+                        // Profil resmini göster, ikonu gizle
+                        profileImage.style.display = 'block';
+                        defaultProfileIcon.style.display = 'none';
+                        settingsProfileImage.style.display = 'block';
+                        settingsDefaultIcon.style.display = 'none';
+                    };
+                    
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+            
+            // Profil bilgilerini kaydetme
+            saveProfileButton.addEventListener('click', function() {
+                // Form validasyonu
+                if (!profileName.value.trim() || !profileSurname.value.trim() || !profileBirthdate.value) {
+                    alert('Lütfen zorunlu alanları doldurun.');
+                    return;
+                }
+                
+                // Yükleme ekranını gösteriyoruz
+                loadingScreen.style.display = 'flex';
+                
+                setTimeout(function() {
+                    // Yükleme ekranını gizliyoruz
+                    loadingScreen.style.display = 'none';
+                    
+                    // Profil bilgilerini güncelliyoruz
+                    const fullName = `${profileName.value} ${profileSurname.value}`;
+                    
+                    sidebarName.textContent = fullName;
+                    welcomeMessage.textContent = `Hoş geldiniz, ${profileName.value}!`;
+                    dashboardCardHolder.textContent = fullName.toUpperCase();
+                    cardPageHolder.textContent = fullName.toUpperCase();
+                    cardPageFullName.textContent = fullName;
+                    
+                    // Doğum tarihini formatla
+                    const birthdate = new Date(profileBirthdate.value);
+                    cardPageBirthdate.textContent = birthdate.toLocaleDateString('tr-TR');
+                    
+                    alert('Profil bilgileriniz başarıyla güncellendi.');
+                }, 1500);
+            });
+            
+            // Ayarları kaydetme
+            saveSettingsButton.addEventListener('click', function() {
+                // Yükleme ekranını gösteriyoruz
+                loadingScreen.style.display = 'flex';
+                
+                setTimeout(function() {
+                    // Yükleme ekranını gizliyoruz
+                    loadingScreen.style.display = 'none';
+                    
+                    alert('Ayarlarınız başarıyla kaydedildi.');
+                }, 1500);
+            });
+            
+            // Rastgele kart numarası oluşturma
+            function generateRandomCardNumber() {
+                let cardNumber = '';
+                for (let i = 0; i < 4; i++) {
+                    let group = '';
+                    for (let j = 0; j < 4; j++) {
+                        group += Math.floor(Math.random() * 10);
+                    }
+                    cardNumber += group;
+                    if (i < 3) cardNumber += ' ';
+                }
+                return cardNumber;
+            }
+            
+            // Varsayılan işlem geçmişi verileri
+            const defaultTransactions = [
+                {
+                    title: 'AVM Market',
+                    date: '22 Mayıs 2023, 14:30',
+                    amount: -120,
+                    icon: 'shopping-basket'
+                },
+                {
+                    title: 'Kafe',
+                    date: '20 Mayıs 2023, 10:15',
+                    amount: -45,
+                    icon: 'coffee'
+                },
+                {
+                    title: 'Bakiye Yükleme',
+                    date: '15 Mayıs 2023, 09:45',
+                    amount: 500,
+                    icon: 'money-bill-wave'
+                },
+                {
+                    title: 'Elektrik Faturası',
+                    date: '10 Mayıs 2023, 17:22',
+                    amount: -78,
+                    icon: 'bolt'
+                },
+                {
+                    title: 'Market Alışverişi',
+                    date: '8 Mayıs 2023, 11:10',
+                    amount: -87,
+                    icon: 'shopping-cart'
+                }
+            ];
+            
+            // İşlem geçmişini oluştur
+            function createTransactionHistory(containerId, transactions = defaultTransactions, limit = null) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                
+                // Eğer limit belirtilmişse, sadece o kadar işlemi göster
+                const transactionsToShow = limit ? transactions.slice(0, limit) : transactions;
+                
+                // Container'ı temizle
+                container.innerHTML = '';
+                
+                // İşlemleri oluştur
+                transactionsToShow.forEach(transaction => {
+                    const transactionItem = document.createElement('div');
+                    transactionItem.className = 'transaction-item';
+                    
+                    const amountClass = transaction.amount < 0 ? 'amount-negative' : 'amount-positive';
+                    const amountPrefix = transaction.amount < 0 ? '' : '+';
+                    
+                    transactionItem.innerHTML = `
+                        <div class="transaction-details">
+                            <div class="transaction-icon">
+                                <i class="fas fa-${transaction.icon}"></i>
+                            </div>
+                            <div class="transaction-text">
+                                <div class="transaction-title">${transaction.title}</div>
+                                <div class="transaction-date">${transaction.date}</div>
+                            </div>
+                        </div>
+                        <div class="transaction-amount ${amountClass}">${amountPrefix}${transaction.amount} TL</div>
+                    `;
+                    
+                    container.appendChild(transactionItem);
+                });
+            }
+            
+            // Sayfa yüklendiğinde kaydedilmiş tema varsa uygula
+            const savedTheme = localStorage.getItem('bonusCardTheme');
+            if (savedTheme) {
+                // Tema sınıflarını temizle
+                document.body.classList.remove('dark-theme', 'blue-theme', 'green-theme');
+                
+                // Seçilen temayı uygula
+                if (savedTheme !== 'default') {
+                    document.body.classList.add(`${savedTheme}-theme`);
+                }
+                
+                // Aktif tema seçeneğini güncelle
+                document.querySelectorAll('.theme-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                document.querySelector(`.theme-option[data-theme="${savedTheme}"]`).classList.add('active');
+            }
+            
+            // Mobil menü için event listener'lar
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 992) {
+                    // Masaüstü görünümünde sidebar stillerini sıfırla
+                    sidebar.style.left = '';
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+            
+            // Esc tuşuna basıldığında mobil menüyü kapat
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+            
+            // Profil resmi yükleme hataları için event handler
+            settingsProfileImageInput.addEventListener('error', function() {
+                alert('Resim yüklenirken bir hata oluştu. Lütfen başka bir resim deneyin.');
+            });
+            
+            // Sayfa yüklendiğinde tarih kontrolü
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            
+            // Maximum tarih olarak bugünü ayarla (gelecek tarihler girilemez)
+            birthdateInput.setAttribute('max', formattedDate);
+            profileBirthdate.setAttribute('max', formattedDate);
+            
+            // Minimum tarih olarak 100 yıl önceyi ayarla
+            const minDate = new Date();
+            minDate.setFullYear(today.getFullYear() - 100);
+            const formattedMinDate = minDate.toISOString().split('T')[0];
+            birthdateInput.setAttribute('min', formattedMinDate);
+            profileBirthdate.setAttribute('min', formattedMinDate);
+            
+            // Form elemanlarının otomatik doldurulması için event listenerlar
+            nameInput.addEventListener('input', function() {
+                // İsmi büyük harfle başlat
+                if (this.value.length > 0) {
+                    this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);
+                }
+            });
+            
+            surnameInput.addEventListener('input', function() {
+                // Soyadını büyük harfle başlat
+                if (this.value.length > 0) {
+                    this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);
+                }
+            });
+            
+            // Profil formunda da aynı kuralları uygula
+            profileName.addEventListener('input', function() {
+                if (this.value.length > 0) {
+                    this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);
+                }
+            });
+            
+            profileSurname.addEventListener('input', function() {
+                if (this.value.length > 0) {
+                    this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);
+                }
+            });
+            
+            // Kartın giriş sayfasının ilk yüklenişinde rastgele ID öner
+            function generateRandomCardId() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                const numbers = '0123456789';
+                let id = 'BNS';
+                
+                // 8 karakter ekle (harf ve sayı karışık)
+                for (let i = 0; i < 8; i++) {
+                    if (Math.random() > 0.6) {  // %40 ihtimalle harf
+                        id += chars.charAt(Math.floor(Math.random() * chars.length));
+                    } else {  // %60 ihtimalle sayı
+                        id += numbers.charAt(Math.floor(Math.random() * numbers.length));
+                    }
+                }
+                
+                return id;
+            }
+            
+            // Sayfa ilk yüklendiğinde örnek bir ID öner
+            cardIdInput.placeholder = generateRandomCardId();
+        });
+    </script>
+</body>
+</html>
+</qodoArtifact>
